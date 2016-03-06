@@ -135,6 +135,18 @@
 	
 	[self generateStartAndExit];
 	
+	// Find a place for the enemy
+	int x, y;
+	do
+	{
+		x = arc4random_uniform(MAZE_SIZE);
+		y = arc4random_uniform(MAZE_SIZE);
+	}
+	while (_mazeData.maze[y][x] == YES);
+	
+	_enemyPos = [[Vector2 alloc] initWithValue:(x * 2) yPos:(y * 2)];
+	
+	
 	[self printDebugMaze];
 }
 

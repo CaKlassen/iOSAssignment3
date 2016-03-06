@@ -31,6 +31,8 @@ typedef struct MazeData
 @property (assign) float startAngle;
 @property (strong) Vector2* exitPos;
 
+@property (strong) Vector2* enemyPos;
+
 @end
 
 #endif /* MazeBuilder_h */

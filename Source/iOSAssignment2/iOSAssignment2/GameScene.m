@@ -19,6 +19,8 @@
 #import "MazeBuilder.h"
 #import "GameSettings.h"
 #import "Map.h"
+#import "Enemy.h"
+#import "MathUtils.h"
 
 
 @interface GameScene ()
@@ -28,6 +30,7 @@
 	NSMutableArray *wallList;
 	Floor *floor;
 	Crate *crate;
+	Enemy *enemy;
 	
 	GameSettings *gameSettings;
 	BasicProgram *basicProgram;
@@ -37,6 +40,8 @@
 	Map *map;
 	
 	CGPoint touchStart;
+	
+	bool closeToEnemy;
 }
 
 @end
@@ -64,8 +69,11 @@
 	
 	// Create the crate
 	crate = [[Crate alloc] initWithPosition:[[Vector3 alloc] initWithValue:MAX(0, [[builder startPos] x]) yPos:2 zPos:MAX([[builder startPos] y], 0)]];
+	enemy = [[Enemy alloc] initWithPosition:[[Vector3 alloc] initWithValue:[[builder enemyPos] x] yPos:2 zPos:[[builder enemyPos] y]]];
 	
 	map = [[Map alloc] initWithBlocks:wallList];
+	
+	closeToEnemy = NO;
 	
 	return self;
 }
@@ -75,6 +83,18 @@
 	[gameSettings update:basicProgram];
 	
 	[crate update];
+	[enemy update];
+	
+	if ([MathUtils distance:[camera position] pointB:[enemy position]] < 2)
+	{
+		closeToEnemy = YES;
+	}
+	else
+	{
+		closeToEnemy = NO;
+	}
+	
+	//NSLog(@"Distance: %f", [MathUtils distance:[camera position] pointB:[enemy position]]);
 }
 
 -(void)draw
@@ -91,6 +111,7 @@
 	
 	[floor draw:basicProgram camera:camera];
 	[crate draw:basicProgram camera:camera];
+	[enemy draw:basicProgram camera:camera];
 	
 	[map draw:spriteProgram camera:camera];
 }
@@ -98,72 +119,144 @@
 
 -(void)pan:(UIPanGestureRecognizer*)recognizer
 {
-	if (recognizer.numberOfTouches == 1)
+	if ([enemy state] || (![enemy state] && !closeToEnemy))
 	{
-		// Movement and turning
-		
-		CGPoint touchLocation = [recognizer locationInView:recognizer.view];
-		
-		if ([recognizer state] == UIGestureRecognizerStateBegan)
+		if (recognizer.numberOfTouches == 1)
 		{
-			touchStart = touchLocation;
+			// Movement and turning
+			
+			CGPoint touchLocation = [recognizer locationInView:recognizer.view];
+			
+			if ([recognizer state] == UIGestureRecognizerStateBegan)
+			{
+				touchStart = touchLocation;
+			}
+			else
+			{
+				// Determine the distance travelled
+				CGPoint dis;
+				dis.x = (touchLocation.x - touchStart.x) / 130; // Turning
+				dis.y = (touchLocation.y - touchStart.y) / 30; // Walking
+				
+				touchStart = touchLocation;
+				
+				[camera moveCamera:[[Vector2 alloc] initWithValue:dis.x yPos:dis.y]];
+				[camera updateRotation:[[Vector3 alloc] initWithValue:0 yPos:-dis.x zPos:0]];
+			}
 		}
 		else
 		{
-			// Determine the distance travelled
-			CGPoint dis;
-			dis.x = (touchLocation.x - touchStart.x) / 130; // Turning
-			dis.y = (touchLocation.y - touchStart.y) / 30; // Walking
+			// Changing fog parameters
+			CGPoint touchLocation = [recognizer locationInView:recognizer.view];
 			
-			touchStart = touchLocation;
-			
-			[camera moveCamera:[[Vector2 alloc] initWithValue:dis.x yPos:dis.y]];
-			[camera updateRotation:[[Vector3 alloc] initWithValue:0 yPos:-dis.x zPos:0]];
+			if ([recognizer state] == UIGestureRecognizerStateBegan)
+			{
+				touchStart = touchLocation;
+			}
+			else
+			{
+				// Determine the distance moved
+				CGPoint dis;
+				dis.x = (touchLocation.x - touchStart.x) / 30; // Fog far
+				dis.y = (touchLocation.y - touchStart.y);
+				
+				touchStart = touchLocation;
+				
+				[gameSettings setFogFar:([gameSettings fogFar] + dis.x)];
+				
+				if (dis.y < -20)
+				{
+					// Toggle fog on
+					[gameSettings setFogEnabled:YES];
+				}
+				else if (dis.y > 20)
+				{
+					// Toggle fog off
+					[gameSettings setFogEnabled:NO];
+				}
+			}
 		}
 	}
 	else
 	{
-		// Changing fog parameters
-		CGPoint touchLocation = [recognizer locationInView:recognizer.view];
-		
-		if ([recognizer state] == UIGestureRecognizerStateBegan)
+		// Manipulate the enemy's model
+		if (recognizer.numberOfTouches == 1)
 		{
-			touchStart = touchLocation;
+			// Rotation
+			CGPoint touchLocation = [recognizer locationInView:recognizer.view];
+			
+			if ([recognizer state] == UIGestureRecognizerStateBegan)
+			{
+				touchStart = touchLocation;
+			}
+			else
+			{
+				// Determine the distance travelled
+				CGPoint dis;
+				dis.x = (touchLocation.x - touchStart.x) / 130; // Rotation y
+				dis.y = (touchLocation.y - touchStart.y) / 130; // Rotation z
+				
+				touchStart = touchLocation;
+				
+				[enemy rotate:dis.y y:dis.x];
+			}
 		}
-		else
+		else if (recognizer.numberOfTouches == 2)
 		{
-			// Determine the distance moved
-			CGPoint dis;
-			dis.x = (touchLocation.x - touchStart.x) / 30; // Fog far
-			dis.y = (touchLocation.y - touchStart.y);
+			// Translation
+			CGPoint touchLocation = [recognizer locationInView:recognizer.view];
 			
-			touchStart = touchLocation;
-			
-			[gameSettings setFogFar:([gameSettings fogFar] + dis.x)];
-			
-			if (dis.y < -20)
+			if ([recognizer state] == UIGestureRecognizerStateBegan)
 			{
-				// Toggle fog on
-				[gameSettings setFogEnabled:YES];
+				touchStart = touchLocation;
 			}
-			else if (dis.y > 20)
+			else
 			{
-				// Toggle fog off
-				[gameSettings setFogEnabled:NO];
+				// Determine the distance travelled
+				CGPoint dis;
+				dis.x = (touchLocation.x - touchStart.x) / 130; // Translate y
+				dis.y = (touchLocation.y - touchStart.y) / 130; // Translate z
+				
+				touchStart = touchLocation;
+				
+				[enemy translate:-dis.x y:0 z:dis.y];
 			}
-			
 		}
-
+		else if (recognizer.numberOfTouches == 3)
+		{
+			// Translation
+			CGPoint touchLocation = [recognizer locationInView:recognizer.view];
+			
+			if ([recognizer state] == UIGestureRecognizerStateBegan)
+			{
+				touchStart = touchLocation;
+			}
+			else
+			{
+				// Determine the distance travelled
+				CGPoint dis;
+				dis.x = (touchLocation.x - touchStart.x) / 130; // Translate y
+				dis.y = (touchLocation.y - touchStart.y) / 130; // Translate z
+				
+				touchStart = touchLocation;
+				
+				[enemy translate:0 y:-dis.y z:0];
+			}
+		}
 	}
 }
 
 
 -(void)doubleTap:(UITapGestureRecognizer*)recognizer
 {
+	// Toggle the state of the enemy
+	[enemy toggleState];
+	
+	
 	// Return to the start
-	[camera reset];
-	[camera makePosition:[[Vector3 alloc] initWithValue:[[builder startPos] x] yPos:2 zPos:[[builder startPos] y]]];
-	[camera updateRotation:[[Vector3 alloc] initWithValue:0 yPos:[builder startAngle] zPos:0]];
+	//[camera reset];
+	//[camera makePosition:[[Vector3 alloc] initWithValue:[[builder startPos] x] yPos:2 zPos:[[builder startPos] y]]];
+	//[camera updateRotation:[[Vector3 alloc] initWithValue:0 yPos:[builder startAngle] zPos:0]];
 }
 
 -(void)doubleTapTwoFingers:(UITapGestureRecognizer*)recognizer
@@ -175,13 +268,22 @@
 {
 	float scale = [recognizer scale];
 
-	if (scale > 1.0)
+	if ([enemy state] || (![enemy state] && !closeToEnemy))
 	{
-		[gameSettings setNight:YES];
+		// Changing day/night
+		if (scale > 1.0)
+		{
+			[gameSettings setNight:YES];
+		}
+		else
+		{
+			[gameSettings setNight:NO];
+		}
 	}
 	else
 	{
-		[gameSettings setNight:NO];
+		// Scaling the enemy
+		[enemy scale:((scale - 1) / 50)];
 	}
 }
 

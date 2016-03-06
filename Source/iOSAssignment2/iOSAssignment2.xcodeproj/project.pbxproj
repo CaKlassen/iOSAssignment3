@@ -12,6 +12,9 @@
 		22270DAE1C78293B00960454 /* MapMarker.m in Sources */ = {isa = PBXBuildFile; fileRef = 22270DAD1C78293B00960454 /* MapMarker.m */; };
 		22270DB11C78297100960454 /* MapBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 22270DB01C78297100960454 /* MapBlock.m */; };
 		22270DB31C7833BD00960454 /* Marker.png in Resources */ = {isa = PBXBuildFile; fileRef = 22270DB21C7833BD00960454 /* Marker.png */; };
+		22270DB81C8CBA5700960454 /* EnemyUV.png in Resources */ = {isa = PBXBuildFile; fileRef = 22270DB71C8CBA5700960454 /* EnemyUV.png */; };
+		22270DBB1C8CBA8200960454 /* Enemy.m in Sources */ = {isa = PBXBuildFile; fileRef = 22270DBA1C8CBA8200960454 /* Enemy.m */; };
+		22270DBE1C8CC09200960454 /* MathUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 22270DBD1C8CC09200960454 /* MathUtils.m */; };
 		22372DDF1C77E7770058FF72 /* Sprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 22372DDE1C77E7770058FF72 /* Sprite.m */; };
 		22372DE21C77E8B30058FF72 /* Map.m in Sources */ = {isa = PBXBuildFile; fileRef = 22372DE11C77E8B30058FF72 /* Map.m */; };
 		22372DE51C77EB470058FF72 /* SpriteProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = 22372DE41C77EB470058FF72 /* SpriteProgram.m */; };
@@ -54,6 +57,12 @@
 		22270DAF1C78297100960454 /* MapBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapBlock.h; sourceTree = "<group>"; };
 		22270DB01C78297100960454 /* MapBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapBlock.m; sourceTree = "<group>"; };
 		22270DB21C7833BD00960454 /* Marker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Marker.png; sourceTree = "<group>"; };
+		22270DB61C8CBA5000960454 /* EnemyData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EnemyData.h; sourceTree = "<group>"; };
+		22270DB71C8CBA5700960454 /* EnemyUV.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = EnemyUV.png; sourceTree = "<group>"; };
+		22270DB91C8CBA6C00960454 /* Enemy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Enemy.h; sourceTree = "<group>"; };
+		22270DBA1C8CBA8200960454 /* Enemy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Enemy.m; sourceTree = "<group>"; };
+		22270DBC1C8CC04D00960454 /* MathUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MathUtils.h; sourceTree = "<group>"; };
+		22270DBD1C8CC09200960454 /* MathUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MathUtils.m; sourceTree = "<group>"; };
 		22372DDD1C77E7410058FF72 /* Sprite.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sprite.h; sourceTree = "<group>"; };
 		22372DDE1C77E7770058FF72 /* Sprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sprite.m; sourceTree = "<group>"; };
 		22372DE01C77E88D0058FF72 /* Map.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Map.h; sourceTree = "<group>"; };
@@ -197,6 +206,8 @@
 				22270DAD1C78293B00960454 /* MapMarker.m */,
 				22270DAF1C78297100960454 /* MapBlock.h */,
 				22270DB01C78297100960454 /* MapBlock.m */,
+				22270DB91C8CBA6C00960454 /* Enemy.h */,
+				22270DBA1C8CBA8200960454 /* Enemy.m */,
 			);
 			name = Entities;
 			sourceTree = "<group>";
@@ -233,6 +244,8 @@
 				22D10D2D1C6FEB27005E7F8C /* TextureLoader.m */,
 				2245A4861C73B9C8009ED107 /* GameSettings.h */,
 				2245A4871C73B9E3009ED107 /* GameSettings.m */,
+				22270DBC1C8CC04D00960454 /* MathUtils.h */,
+				22270DBD1C8CC09200960454 /* MathUtils.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -243,6 +256,8 @@
 				22D10D1D1C6ED45B005E7F8C /* WallData.h */,
 				22D10D2F1C6FFA6C005E7F8C /* FloorData.h */,
 				2293A8A21C717A2F004AE2CD /* CrateData.h */,
+				22270DB61C8CBA5000960454 /* EnemyData.h */,
+				22270DB71C8CBA5700960454 /* EnemyUV.png */,
 				22270DB21C7833BD00960454 /* Marker.png */,
 				2293A8A01C716EC8004AE2CD /* WallUV1.png */,
 				2293A89A1C716E93004AE2CD /* WallUV2.png */,
@@ -321,6 +336,7 @@
 				2293A8A11C716EC8004AE2CD /* WallUV1.png in Resources */,
 				22270DA91C78277F00960454 /* Block.png in Resources */,
 				22270DAA1C78277F00960454 /* Map.png in Resources */,
+				22270DB81C8CBA5700960454 /* EnemyUV.png in Resources */,
 				22B0EED71C6C33BC00B2FA35 /* BasicShader.vsh in Resources */,
 				2293A89D1C716E93004AE2CD /* WallUV2.png in Resources */,
 				22B0EEDF1C6C33BC00B2FA35 /* Assets.xcassets in Resources */,
@@ -355,6 +371,8 @@
 				22D10D2E1C6FEB27005E7F8C /* TextureLoader.m in Sources */,
 				22372DE51C77EB470058FF72 /* SpriteProgram.m in Sources */,
 				22D10D221C6ED4C6005E7F8C /* Wall.m in Sources */,
+				22270DBB1C8CBA8200960454 /* Enemy.m in Sources */,
+				22270DBE1C8CC09200960454 /* MathUtils.m in Sources */,
 				22270DB11C78297100960454 /* MapBlock.m in Sources */,
 				22D10CED1C6EACF3005E7F8C /* Model.m in Sources */,
 				22D10D1B1C6EB6DC005E7F8C /* BasicProgram.m in Sources */,
