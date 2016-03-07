@@ -17,6 +17,9 @@
 -(void)update;
 -(void)draw:(Program*)program camera:(Camera*)camera;
 
+@property (assign) GLKVector2 bboxSize;
+@property (strong) Vector3* position;
+
 @end
 
 #endif /* Entity_h */

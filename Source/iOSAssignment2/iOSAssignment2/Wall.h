@@ -16,8 +16,6 @@
 
 -(id)initWithPosition:(Vector3*)pos type:(int)type;
 
-@property (strong) Vector3* position;;
-
 @end
 
 

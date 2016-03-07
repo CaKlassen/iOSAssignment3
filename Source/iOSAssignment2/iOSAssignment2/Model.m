@@ -83,10 +83,40 @@
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 		glEnableVertexAttribArray(2);
 		
-		
+		[self setBoundingBox:Positions numVertices:posSize / sizeof(float)];
 	}
 	
 	return self;
+}
+
+-(void)setBoundingBox:(const float *)vertices numVertices:(int)numVertices
+{
+	NSMutableArray *list = [[NSMutableArray alloc] init];
+	
+	// Retrieve a list of 2D points from the vertices list
+	for (int i = 0; i < numVertices; i += 3)
+	{
+		Vector2 *vec = [[Vector2 alloc] initWithValue:(vertices[i]) yPos:(vertices[i + 1])];
+		[list addObject:vec];
+	}
+	
+	// Iterate through the points and find the min and max points
+	GLKVector2 bboxMin = GLKVector2Make(9999, 9999);
+	GLKVector2 bboxMax = GLKVector2Make(-9999, -9999);
+	
+	for (Vector2 *cVec in list)
+	{
+		GLKVector2 vec = GLKVector2Make(cVec.x, cVec.y);
+		bboxMin = GLKVector2Minimum(bboxMin, vec);
+		bboxMax = GLKVector2Maximum(bboxMax, vec);
+	}
+	
+	self.bboxSize = GLKVector2Make(bboxMax.x - bboxMin.x, bboxMax.y - bboxMin.y);
+}
+
+- (CGRect)boundingBox {
+	CGRect result = CGRectMake(self.position.x - self.bboxSize.x / 2, self.position.z - self.bboxSize.y / 2, self.bboxSize.x, self.bboxSize.y);
+	return result;
 }
 
 -(void)setTexture

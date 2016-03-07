@@ -13,7 +13,6 @@
 
 @interface Crate ()
 {
-	Vector3 *position;
 	float rotation;
 }
 
@@ -29,7 +28,7 @@ static const float ROTATE_SPEED = 0.01;
 -(id)initWithPosition:(Vector3*)pos
 {
 	self = [super initWithTextureFile:FILE_NAME pos:CratePositions posSize:sizeof(CratePositions) tex:CrateTexels texSize:sizeof(CrateTexels) norm:CrateNormals normSize:sizeof(CrateNormals)];
-	position = pos;
+	self.position = pos;
 	
 	rotation = 0;
 	
@@ -47,7 +46,7 @@ static const float ROTATE_SPEED = 0.01;
 	// Set up the model matrix
 	GLKMatrix4 modelMatrix = GLKMatrix4Identity;
 	modelMatrix = GLKMatrix4Multiply([camera getLookAt], modelMatrix);
-	modelMatrix = GLKMatrix4Translate(modelMatrix, [position x], [position y], [position z]);
+	modelMatrix = GLKMatrix4Translate(modelMatrix, [self.position x], [self.position y], [self.position z]);
 	modelMatrix = GLKMatrix4RotateY(modelMatrix, rotation);
 	
 	_normalMatrix = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelMatrix), NULL);

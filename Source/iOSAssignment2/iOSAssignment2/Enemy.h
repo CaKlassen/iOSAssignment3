@@ -15,14 +15,13 @@
 
 @interface Enemy : Model
 
--(id)initWithPosition:(Vector3*)pos;
+-(id)initWithPosition:(Vector3*)pos wallList:(NSMutableArray*)wallList;
 -(void)toggleState;
 -(void)rotate:(float)x y:(float)y;
 -(void)translate:(float)x y:(float)y z:(float)z;
 -(void)scale:(float)val;
 
 @property (assign) bool state;
-@property (strong) Vector3* position;
 
 @end
 

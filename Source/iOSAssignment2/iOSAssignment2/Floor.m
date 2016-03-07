@@ -13,7 +13,7 @@
 
 @interface Floor ()
 {
-	Vector3 *position;
+
 }
 
 @end
@@ -28,7 +28,7 @@ static const int SCALE = 20;
 -(id)initWithPosition:(Vector3*)pos
 {
 	self = [super initWithTextureFile:FILE_NAME pos:FloorPositions posSize:sizeof(FloorPositions) tex:FloorTexels texSize:sizeof(FloorTexels) norm:FloorNormals normSize:sizeof(FloorNormals)];
-	position = pos;
+	self.position = pos;
 	return self;
 }
 
@@ -43,7 +43,7 @@ static const int SCALE = 20;
 	// Set up the model matrix
 	GLKMatrix4 modelMatrix = GLKMatrix4Identity;
 	modelMatrix = GLKMatrix4Multiply([camera getLookAt], modelMatrix);
-	modelMatrix = GLKMatrix4Translate(modelMatrix, [position x], [position y], [position z]);
+	modelMatrix = GLKMatrix4Translate(modelMatrix, [self.position x], [self.position y], [self.position z]);
 	modelMatrix = GLKMatrix4Scale(modelMatrix, SCALE, SCALE, SCALE);
 	
 	_normalMatrix = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelMatrix), NULL);

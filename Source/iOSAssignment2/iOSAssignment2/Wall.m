@@ -20,10 +20,21 @@
 	NSString *str = [NSString stringWithFormat:@"WallUV%d.png", type];
 	
 	self = [super initWithTextureFile:str pos:WallPositions posSize:sizeof(WallPositions) tex:WallTexels texSize:sizeof(WallTexels) norm:WallNormals normSize:sizeof(WallNormals)];
-	_position = [[Vector3 alloc] initWithValue:(pos.x * 2) yPos:(pos.y * 2) zPos:(pos.z * 2)];
+	self.position = [[Vector3 alloc] initWithValue:(pos.x * 2) yPos:(pos.y * 2) zPos:(pos.z * 2)];
 	
 	
 	return self;
+}
+
+-(CGRect)boundingBox
+{
+	CGRect result = CGRectMake(self.position.x, self.position.z, self.bboxSize.x, self.bboxSize.y);
+	GLKMatrix4 modelMatrix = GLKMatrix4Identity;
+	modelMatrix = GLKMatrix4Translate(modelMatrix, [self.position x], [self.position y], [self.position z]);
+
+	
+	CGAffineTransform transform = CGAffineTransformMake(modelMatrix.m00, modelMatrix.m01, modelMatrix.m10, modelMatrix.m11, modelMatrix.m30, modelMatrix.m31);
+	return CGRectApplyAffineTransform(result, transform);
 }
 
 -(void)update
@@ -37,7 +48,7 @@
 	// Set up the model matrix
 	GLKMatrix4 modelMatrix = GLKMatrix4Identity;
 	modelMatrix = GLKMatrix4Multiply([camera getLookAt], modelMatrix);
-	modelMatrix = GLKMatrix4Translate(modelMatrix, [_position x], [_position y], [_position z]);
+	modelMatrix = GLKMatrix4Translate(modelMatrix, [self.position x], [self.position y], [self.position z]);
 	
 	_normalMatrix = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelMatrix), NULL);
 	

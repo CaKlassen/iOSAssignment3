@@ -69,7 +69,7 @@
 	
 	// Create the crate
 	crate = [[Crate alloc] initWithPosition:[[Vector3 alloc] initWithValue:MAX(0, [[builder startPos] x]) yPos:2 zPos:MAX([[builder startPos] y], 0)]];
-	enemy = [[Enemy alloc] initWithPosition:[[Vector3 alloc] initWithValue:[[builder enemyPos] x] yPos:2 zPos:[[builder enemyPos] y]]];
+	enemy = [[Enemy alloc] initWithPosition:[[Vector3 alloc] initWithValue:[[builder enemyPos] x] yPos:2 zPos:[[builder enemyPos] y]] wallList:wallList];
 	
 	map = [[Map alloc] initWithBlocks:wallList];
 	
