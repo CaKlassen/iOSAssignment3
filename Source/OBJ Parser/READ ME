@@ -1,0 +1,26 @@
+READ ME
+
+OBJ PARSER
+
+should parse an OBJ File into an .h file
+
+Please make OBJ models in blender in the same way as this tutorial specifies:
+http://www.raywenderlich.com/48293/how-to-export-blender-models-to-opengl-es-part-1
+
+Updated to take user input for OBJ filename.
+
+IMPORTANT:
+Before running, please go to Product->Scheme->Edit Scheme
+then select the Options tab. Under options check “use custom working directory” and enter in ${PROJECT_DIR}
+
+now you should be good to go.
+
+USAGE:
+1.Place the OBJ File into the "Source" folder
+2.Open the OBJ Parser project
+3.Run the program and enter the OBJ file name (without extension) into the debug window
+when prompted
+4.Run the program (hope it doesn't die)
+5.Check the product folder; a .h file with the same name as the model should be produced.
+
+That's it. Should work.

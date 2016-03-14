@@ -159,22 +159,34 @@ static const float MOVE_SPEED = 0.05f;
 			}
 			
 			// Check for collisions
-			CGRect bbox = [self boundingBox];
+			//CGRect bbox = [self boundingBox];
 			
 			for (Wall *wall in wallList)
 			{
-				CGRect wallBox = [wall boundingBox];
+				//CGRect wallBox = [wall boundingBox];
 				
-				if (CGRectIntersectsRect(bbox, wallBox))
-				{
-					NSLog(@"%f, %f (%f, %f) - %f, %f (%f, %f)", bbox.origin.x, bbox.origin.y, bbox.size.width, bbox.size.height, wallBox.origin.x, wallBox.origin.y, wallBox.size.width, wallBox.size.height);
-					
-					self.position = prevPos;
-					moving = false;
-					
-					NSLog(@"Collision!");
-					break;
-				}
+                if(ABS(wall.position.x - self.position.x) <= 1.55 && ABS(wall.position.z - self.position.z) <= 1.51)//check against X and Z thresholds
+                {
+                    NSLog(@"%f, %f, %f, %f", wall.position.x, self.position.x, wall.position.z, self.position.z);
+                    
+                    
+                    self.position = prevPos;
+                    moving = false;
+                    
+                    NSLog(@"Collision!");
+                    break;
+                }
+                
+//				if (CGRectIntersectsRect(bbox, wallBox))
+//				{
+//					NSLog(@"%f, %f (%f, %f) - %f, %f (%f, %f)", bbox.origin.x, bbox.origin.y, bbox.size.width, bbox.size.height, wallBox.origin.x, wallBox.origin.y, wallBox.size.width, wallBox.size.height);
+//					
+//					self.position = prevPos;
+//					moving = false;
+//					
+//					NSLog(@"Collision!");
+//					break;
+//				}
 			}
 		}
 	}
@@ -182,16 +194,17 @@ static const float MOVE_SPEED = 0.05f;
 
 -(CGRect)boundingBox
 {
-	CGRect result = CGRectMake(self.position.x, self.position.z, self.bboxSize.x, self.bboxSize.y);
-	GLKMatrix4 modelMatrix = GLKMatrix4Identity;
-	modelMatrix = GLKMatrix4Translate(modelMatrix, translationX, translationY, translationZ);
-	modelMatrix = GLKMatrix4Translate(modelMatrix, [self.position x], [self.position y], [self.position z]);
-	modelMatrix = GLKMatrix4RotateY(modelMatrix, rotationY);
-	modelMatrix = GLKMatrix4RotateX(modelMatrix, rotationX);
-	modelMatrix = GLKMatrix4Scale(modelMatrix, scale, scale, scale);
-	
-	CGAffineTransform transform = CGAffineTransformMake(modelMatrix.m00, modelMatrix.m01, modelMatrix.m10, modelMatrix.m11, modelMatrix.m30, modelMatrix.m31);
-	return CGRectApplyAffineTransform(result, transform);
+	CGRect result = CGRectMake(self.position.x - self.bboxSize.x/2, self.position.z - self.bboxSize.y/2, self.bboxSize.x, self.bboxSize.y);
+    return result;
+//	GLKMatrix4 modelMatrix = GLKMatrix4Identity;
+//	modelMatrix = GLKMatrix4Translate(modelMatrix, translationX, translationY, translationZ);
+//	modelMatrix = GLKMatrix4Translate(modelMatrix, [self.position x], [self.position y], [self.position z]);
+//	modelMatrix = GLKMatrix4RotateY(modelMatrix, rotationY);
+//	modelMatrix = GLKMatrix4RotateX(modelMatrix, rotationX);
+//	modelMatrix = GLKMatrix4Scale(modelMatrix, scale, scale, scale);
+//	
+//	CGAffineTransform transform = CGAffineTransformMake(modelMatrix.m00, modelMatrix.m01, modelMatrix.m10, modelMatrix.m11, modelMatrix.m30, modelMatrix.m31);
+//	return CGRectApplyAffineTransform(result, transform);
 }
 
 
@@ -223,6 +236,7 @@ static const float MOVE_SPEED = 0.05f;
 	
 	//draw the model
 	glDrawArrays(GL_TRIANGLES, 0, EnemyVertices);
+    
 }
 
 @end

@@ -28,13 +28,14 @@
 
 -(CGRect)boundingBox
 {
-	CGRect result = CGRectMake(self.position.x, self.position.z, self.bboxSize.x, self.bboxSize.y);
-	GLKMatrix4 modelMatrix = GLKMatrix4Identity;
-	modelMatrix = GLKMatrix4Translate(modelMatrix, [self.position x], [self.position y], [self.position z]);
-
-	
-	CGAffineTransform transform = CGAffineTransformMake(modelMatrix.m00, modelMatrix.m01, modelMatrix.m10, modelMatrix.m11, modelMatrix.m30, modelMatrix.m31);
-	return CGRectApplyAffineTransform(result, transform);
+	CGRect result = CGRectMake(self.position.x - self.bboxSize.x/2, self.position.z - self.bboxSize.y/2, self.bboxSize.x, self.bboxSize.y);
+    return result;
+//	GLKMatrix4 modelMatrix = GLKMatrix4Identity;
+//	modelMatrix = GLKMatrix4Translate(modelMatrix, [self.position x], [self.position y], [self.position z]);
+//
+//	
+//	CGAffineTransform transform = CGAffineTransformMake(modelMatrix.m00, modelMatrix.m01, modelMatrix.m10, modelMatrix.m11, modelMatrix.m30, modelMatrix.m31);
+//	return CGRectApplyAffineTransform(result, transform);
 }
 
 -(void)update
