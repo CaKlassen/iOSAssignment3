@@ -49,7 +49,7 @@
 	self.position.x += pos.x;
 	self.position.y += pos.y;
 	self.position.z += pos.z;
-
+	
 	[self setLookAtTarget];
 }
 

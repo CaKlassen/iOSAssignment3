@@ -11,6 +11,7 @@
 #import "EnemyData.h"
 #import "Vector.h"
 #import "Wall.h"
+#import "MazeBuilder.h"
 
 @interface Enemy ()
 {
@@ -60,7 +61,7 @@ static const float MOVE_SPEED = 0.05f;
 	moveTimer = MOVE_TIMER;
 	moving = false;
 	
-	prevPos = pos;
+	prevPos = [[Vector3 alloc] initWithValue:0 yPos:0 zPos:0];
 	
 	return self;
 }
@@ -116,13 +117,13 @@ static const float MOVE_SPEED = 0.05f;
 				waitTimer = WAIT_TIMER;
 				moving = YES;
 				moveDir = arc4random_uniform(4);
-				
-				
-				prevPos = self.position;
 			}
 		}
 		else
 		{
+			[prevPos setX:self.position.x];
+			[prevPos setZ:self.position.z];
+			
 			// Move
 			if (moveTimer > 0)
 			{
@@ -159,7 +160,6 @@ static const float MOVE_SPEED = 0.05f;
 			}
 			
 			// Check for collisions
-			//CGRect bbox = [self boundingBox];
 			
 			for (Wall *wall in wallList)
 			{
@@ -167,26 +167,22 @@ static const float MOVE_SPEED = 0.05f;
 				
                 if(ABS(wall.position.x - self.position.x) <= 1.55 && ABS(wall.position.z - self.position.z) <= 1.51)//check against X and Z thresholds
                 {
-                    NSLog(@"%f, %f, %f, %f", wall.position.x, self.position.x, wall.position.z, self.position.z);
-                    
-                    
-                    self.position = prevPos;
+					[self.position setX:prevPos.x];
+					[self.position setZ:prevPos.z];
+					
                     moving = false;
-                    
-                    NSLog(@"Collision!");
                     break;
                 }
-                
-//				if (CGRectIntersectsRect(bbox, wallBox))
-//				{
-//					NSLog(@"%f, %f (%f, %f) - %f, %f (%f, %f)", bbox.origin.x, bbox.origin.y, bbox.size.width, bbox.size.height, wallBox.origin.x, wallBox.origin.y, wallBox.size.width, wallBox.size.height);
-//					
-//					self.position = prevPos;
-//					moving = false;
-//					
-//					NSLog(@"Collision!");
-//					break;
-//				}
+			}
+			
+			// Check for being outside the maze
+			if (self.position.x < 0 || self.position.x > MAZE_SIZE * 2 - 1 ||
+				self.position.z < 0 || self.position.z > MAZE_SIZE * 2 - 1)
+			{
+				[self.position setX:prevPos.x];
+				[self.position setZ:prevPos.z];
+				
+				moving = false;
 			}
 		}
 	}
